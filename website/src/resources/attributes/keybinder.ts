@@ -5,6 +5,7 @@ import * as Mousetrap from "mousetrap";
 export class keybinder {
     private focusElem: HTMLInputElement;
     private key: string = 'space';
+    
 
     @bindable({ defaultBindingMode: bindingMode.twoWay }) value: any; // value of input
 
@@ -18,6 +19,7 @@ export class keybinder {
     attached() {
         console.log("attached mousetrap", this.value);
         this.focusElem = this.element as HTMLInputElement;
+        
 
         this.element.addEventListener("focus", () => {
             console.log("focus");
@@ -72,6 +74,7 @@ export class keybinder {
     private toggleDisplay(x: HTMLElement) {
         if (x.style.display === 'none') {
             x.style.display = 'block';
+            x.style.width = (this.focusElem.offsetWidth) + "px";
         } else {
             x.style.display = 'none';
         }

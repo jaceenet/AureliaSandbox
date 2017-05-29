@@ -5,13 +5,42 @@
 
 .autocomplete-suggestion {
   position: absolute;
-  top: 32px;
-  left: 2px;
+  top: 38px;
+  left: 0;
   height: 300px;
   z-index: 999;
   overflow-y:auto;
+  background-color: white;
+  border-top: 1px solid gray dashed;
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
+  border-bottom: 1px solid gray;
+  
 }
 
 .autocomplete-container {
   position: relative;
+
+  a {
+    display: block;
+    padding: 0 6px;
+  }
+
+  a:hover{
+    background-color: pink;
+  }
+}
+
+.autocomplete-suggestion a {
+  display: block;
+}
+
+.list-group-2 {
+  width: 200px;
+  border: 1px solid gray;
+
+  a {
+    display: block;
+
+  }
 }
