@@ -7,6 +7,6 @@ import {build} from 'aurelia-cli';
 export default function processCSS() {
   return gulp.src(project.cssProcessor.source)
     .pipe(sourcemaps.init())
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass(project.cssProcessor.sassOptions).on('error', sass.logError))
     .pipe(build.bundle());
 };

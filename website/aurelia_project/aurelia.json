@@ -27,7 +27,12 @@
     "id": "sass",
     "displayName": "Sass",
     "fileExtension": ".scss",
-    "source": "src/**/*.scss"
+    "source": "src/**/*.scss",
+    "sassOptions": {
+      "includePaths": [
+        "node_modules\\foundation-sites\\scss"
+      ]
+    }
   },
   "editor": {
     "id": "vscode",
@@ -95,6 +100,7 @@
           "node_modules/requirejs/require.js"
         ],
         "dependencies": [
+          "mousetrap",
           "aurelia-binding",
           "aurelia-bootstrapper",
           "aurelia-dependency-injection",

@@ -1,3 +1,41 @@
 <template>
-  <h1>${message}</h1>
+  <require from="site.css"></require>
+  <require from="resources/attributes/keybinder"></require>
+
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <!--<ul class="dropdown menu" data-dropdown-menu>
+      <li class="menu-text">Site Title</li>
+      <li>
+        <a href="#">One</a>
+        <ul class="menu vertical">
+          <li><a href="#">One</a></li>
+          <li><a href="#">Two</a></li>
+          <li><a href="#">Three</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Two</a></li>
+      <li><a href="#">Three</a></li>
+    </ul>-->
+    </div>
+    <div class="top-bar-right">
+      <ul class="menu">
+
+        <li><input type="search" mousetrap.bind="backspace" placeholder="Search"></li>
+        <li><button type="button" class="button">Search</button>
+          <div class="autocomplete-suggestion" style="display:none">
+            <div class="list-group">
+              <a href="#">item item item 1</a>
+              <a href="#">item item item 2</a>
+              <a href="#">item item item 3</a>
+            </div>
+        </li>
+      </ul>
+      </div>
+    </div>
+
+    <div>
+      <h1>${message}</h1>
+    </div>
+
 </template>
