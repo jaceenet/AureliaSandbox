@@ -13,11 +13,11 @@ export class Intellisense {
     querytext: string;
 
     constructor(private element: Element) {
+
         this.items = [];
         this.items = this.query("");
         this.selectedIndex = -1;
         this.nest = new Nest("http://192.168.10.25:9200", new HttpClient());
-        this.nest.query("25").then(data => {console.log("search",data)});
     }
 
     attached() {
@@ -86,8 +86,9 @@ export class Intellisense {
     }
 
     onfocus(this: Intellisense) {
-        //console.log("focus")
-        this.items = this.query(this.querytext);
+
+        console.log("focus")
+        this.query(this.querytext);
         this.toggleDisplay(this.suggestElement);
     }
 
@@ -97,13 +98,23 @@ export class Intellisense {
         this.toggleDisplay(this.suggestElement);
     }
 
-    query(value: string) {
+    query(value: string = "") {
         //console.log("executing query: " + value);
 
-        var cache = this.simpleQuery(value, cache);
-        cache = this.filterQuery(value, cache);
-        cache = this.advancedSearch(value, cache);
-        return this.highlightSearch(value, cache);;
+        try {
+                this.nest.query(value).then(data => {
+                    console.log("got data: ", data);
+                    var cache = this.simpleQuery(value, data);
+                    cache = this.filterQuery(value, cache);
+                    cache = this.advancedSearch(value, cache);
+                    this.items = this.highlightSearch(value, cache);
+                });
+
+        } catch (error) {
+
+        }
+
+
     }
 
     moveIndex(position: number) {
@@ -171,11 +182,11 @@ export class Intellisense {
         return cache;
     }
 
-    simpleQuery(query: string = "", cache: suggestItem[] = []) : suggestItem[] {
-        
+    simpleQuery(query: string = "", cache: suggestItem[] = []): suggestItem[] {
+
         console.log("simple query: ", query, " cache: ", cache);
 
-        if (query == undefined || query.length > 0) {
+        if (query == undefined) {
             cache.push({ "name": "Who is Donald Trump" });
             cache.push({ "name": "give medical care to crossword" });
             cache.push({ "name": "who can ask more of a man" });
@@ -188,12 +199,12 @@ export class Intellisense {
         return cache;
     }
 
-    filterQuery(query: string = "", cache: suggestItem[]) : suggestItem[]{
+    filterQuery(query: string = "", cache: suggestItem[]): suggestItem[] {
         return cache.filter(s => s.name.toLowerCase().indexOf(query.toLowerCase()) >= 0);
     }
 
-    highlightSearch(query: string = "", items: suggestItem[]):any[]{
-        
+    highlightSearch(query: string = "", items: suggestItem[]): any[] {
+
 
         var item_mod = items.map(mod => {
 
@@ -201,18 +212,18 @@ export class Intellisense {
             var b = mod.name.substring(0, i);
 
             return {
-                "name": mod.name, 
+                "name": mod.name,
                 "begin": mod.name.substring(0, i),
                 "match": query,
                 "end": mod.name.substring(b.length + query.length)
             };
-                
+
         });
-        
+
         return item_mod;
     }
 }
 
-export interface suggestItem{
+export interface suggestItem {
     name: string;
 }

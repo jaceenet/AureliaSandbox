@@ -18,6 +18,8 @@ export class Nest {
                         return { "name": h._source.title };
                     })
                 }
+
+                return [];
             });
     }
 
