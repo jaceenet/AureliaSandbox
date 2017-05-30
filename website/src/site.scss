@@ -24,10 +24,16 @@
   a {
     display: block;
     padding: 0 6px;
+    font-style: italic;
+    color: darkgrey;
+
+    span{
+      color: black;
+    }
   }
 
   a:hover, a.active {
-    background-color: pink;
+    background-color: grey;
   }
 }
 

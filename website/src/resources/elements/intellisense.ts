@@ -24,9 +24,9 @@ export class Intellisense {
         this.inputElement.addEventListener("keydown", (e: KeyboardEvent) => {
             console.log("keydown intelli, ", e);
 
-            if (e.keyCode == 9){
+            if (e.keyCode == 9) {
                 this.moveIndex(this.selectedIndex + 1);
-                e.preventDefault();                
+                e.preventDefault();
                 return false;
             }
 
@@ -40,7 +40,7 @@ export class Intellisense {
                 return false;
             }
 
-            if (e.keyCode == 13) {                
+            if (e.keyCode == 13) {
                 this.setIndex(this.selectedIndex);
                 return true;
             }
@@ -57,25 +57,25 @@ export class Intellisense {
         this.items = this.query(this.querytext);
     }
 
-    clicklink(index: number){
+    clicklink(index: number) {
         this.setIndex(index);
         return true;
     }
 
-    setIndex(index: number){
-        
+    setIndex(index: number) {
+
         console.log("setindex ", index, event);
-        if (index < this.items.length){
+        if (index < this.items.length) {
             this.selectedIndex = index;
             this.inputElement.value = this.items[index].name;
         }
-        
+
     }
 
     private toggleDisplay(x: HTMLElement) {
         if (x.style.display === 'none') {
             x.style.display = 'block';
-            x.style.width = (this.suggestElement.offsetWidth) + "px";
+            //x.style.width = (this.suggestElement.offsetWidth) + "px";
         } else {
             x.style.display = 'none';
         }
@@ -93,24 +93,16 @@ export class Intellisense {
         this.toggleDisplay(this.suggestElement);
     }
 
+    private from: string[] = [" from", " in"];
+    private in: string[] = [" is", " where"];
 
     query(value: string) {
         console.log("executing query: " + value);
 
-        var cache = [
-            { "name": "John" },
-            { "name": "John Doe" },
-            { "name": "Jane Doe" },
-            { "name": "Stuff" },
-            { "name": "Who is" },
-            { "name": "Who is Donald" }
-        ];
-
-        if (value === undefined || value.length == 0 || cache == undefined || cache.length == 0) {
-            return cache;
-        }
-
-        return cache.filter(s => s.name.toLowerCase().startsWith(value.toLowerCase()));
+        var cache = this.simpleQuery(value, cache);
+        cache = this.filterQuery(value, cache);
+        cache = this.advancedSearch(value, cache);
+        return this.highlightSearch(value, cache);;
     }
 
     moveIndex(position: number) {
@@ -125,13 +117,97 @@ export class Intellisense {
             this.selectedIndex = position;
         }
 
-        if (position >= 0){
-            var s  = this.items[this.selectedIndex].name
+        if (position >= 0) {
+            var s = this.items[this.selectedIndex].name
             this.inputElement.value = s;
             this.inputElement.selectionStart = s.length;
             this.inputElement.selectionEnd = s.length;
         }
 
-        console.log("selectedIndex =" + this.selectedIndex);
+        //console.log("selectedIndex =" + this.selectedIndex);
     }
+
+    //queryMatch(token: string[], query: string, callback: () => string[]){
+    queryMatch(tokens: string[], query: string): boolean {
+        if (query == undefined) return;
+        if (tokens == undefined || tokens.length == 0) return;
+        //console.log("matching...", tokens.filter(s => query.endsWith(s)));
+        var match = tokens.filter(s => query.endsWith(s)).length > 0;
+
+
+
+        return match;
+
+    }
+
+    advancedSearch(query: string = "", cache: any[] = []): suggestItem[] {
+        console.log("advanced: ", query, " cache: ", cache);
+
+        if (query == undefined || query.length == 0) {
+            cache.push({ "name": "#brug sidste søgning" })
+
+            cache.push({ "name": "på ATC:A01311 fra år:2017" })
+            cache.push({ "name": "alle regioner" })
+        }
+
+        if (this.queryMatch(this.from, query)) {
+            cache.push({ "name": query + " customers" });
+            cache.push({ "name": query + " contacts" });
+        }
+
+
+        if (this.queryMatch(this.in, query)) {
+
+            for (var year = 2000; year < 2025; year++) {
+                cache.push({ "name": query + " " + year });
+            }
+
+        }
+
+        return cache;
+    }
+
+    simpleQuery(query: string = "", cache: suggestItem[] = []) : suggestItem[] {
+        console.log("simple query: ", query, " cache: ", cache);
+
+        if (query == undefined || query.length > 0) {
+            cache.push({ "name": "Who is Donald Trump" });
+            cache.push({ "name": "give medical care to crossword" });
+            cache.push({ "name": "who can ask more of a man" });
+            cache.push({ "name": "is design thinking the new liberal arts" });
+            cache.push({ "name": "who demanded nothing less than a revolution in the government of the country" });
+            cache.push({ "name": "be more productive" });
+            cache.push({ "name": "who rules the world noam chomsky" });
+        }
+
+        return cache;
+    }
+
+    filterQuery(query: string = "", cache: suggestItem[]) : suggestItem[]{
+        return cache.filter(s => s.name.toLowerCase().indexOf(query.toLowerCase()) >= 0);
+    }
+
+    highlightSearch(query: string = "", items: suggestItem[]):any[]{
+        
+
+        var item_mod = items.map(mod => {
+
+            var i = mod.name.toLowerCase().indexOf(query.toLowerCase());
+            var b = mod.name.substring(0, i);
+
+            return {
+                "name": mod.name, 
+                "begin": mod.name.substring(0, i),
+                "match": query,
+                "end": mod.name.substring(b.length + query.length)
+            };
+                
+        });
+        
+        return item_mod;
+    }
+}
+
+export interface suggestItem{
+    name: string;
 }
