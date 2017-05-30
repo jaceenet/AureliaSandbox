@@ -75,6 +75,7 @@ export class Intellisense {
 
     query(value: string) {
         console.log("executing query: " + value);
+
         var cache = [
             { "name": "John" },
             { "name": "John Doe" },
@@ -84,11 +85,11 @@ export class Intellisense {
             { "name": "Who is Donald" }
         ];
 
-        if (value === undefined || value.length == 0) {
+        if (value === undefined || value.length == 0 || cache == undefined || cache.length == 0) {
             return cache;
         }
 
-        return cache.filter(s => s.name.startsWith(value));
+        return cache.filter(s => s.name.toLowerCase().startsWith(value.toLowerCase()));
     }
 
     moveIndex(position: number) {
