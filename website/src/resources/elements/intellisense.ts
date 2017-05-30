@@ -144,10 +144,10 @@ export class Intellisense {
         console.log("advanced: ", query, " cache: ", cache);
 
         if (query == undefined || query.length == 0) {
-            cache.push({ "name": "#brug sidste søgning" })
+            cache.push({ "name": "who" })
 
-            cache.push({ "name": "på ATC:A01311 fra år:2017" })
-            cache.push({ "name": "alle regioner" })
+            cache.push({ "name": "in" })
+            cache.push({ "name": "where" })
         }
 
         if (this.queryMatch(this.from, query)) {
