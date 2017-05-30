@@ -6,32 +6,14 @@ export class keybinder {
     private focusElem: HTMLInputElement;
     private key: string = 'space';
     
-
     @bindable({ defaultBindingMode: bindingMode.twoWay }) value: any; // value of input
 
     constructor(private element: Element) {
-    }
-
-    public valueChanged() {
-        console.log("changed: ", this.value);
+        this.focusElem = element as HTMLInputElement;
     }
 
     attached() {
-        console.log("attached mousetrap", this.value);
-        this.focusElem = this.element as HTMLInputElement;
-        
-
-        this.element.addEventListener("focus", () => {
-            console.log("focus");
-            var e = document.getElementsByClassName("autocomplete-suggestion")[0] as HTMLElement;
-            this.toggleDisplay(e);
-        });
-
-        this.element.addEventListener("blur", () => {
-            console.log("blur");
-            var e = document.getElementsByClassName("autocomplete-suggestion")[0] as HTMLElement;
-            this.toggleDisplay(e);
-        });
+        console.log("attached mousetrap", this.element);
 
         this.element.addEventListener("keydown", (e: KeyboardEvent) => {
             console.log("key", e);
@@ -68,15 +50,6 @@ export class keybinder {
             this.focusElem.selectionStart = 0;
             this.focusElem.selectionEnd = s.length;
             console.log("selected " + s)
-        }
-    }
-
-    private toggleDisplay(x: HTMLElement) {
-        if (x.style.display === 'none') {
-            x.style.display = 'block';
-            x.style.width = (this.focusElem.offsetWidth) + "px";
-        } else {
-            x.style.display = 'none';
         }
     }
 }

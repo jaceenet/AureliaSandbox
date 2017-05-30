@@ -26,7 +26,7 @@
     padding: 0 6px;
   }
 
-  a:hover{
+  a:hover, a.active {
     background-color: pink;
   }
 }
@@ -41,6 +41,5 @@
 
   a {
     display: block;
-
   }
 }
