@@ -34,7 +34,7 @@ export class Intellisense {
                 return false;
             }
 
-            if (e.keyCode == 13)            {
+            if (e.keyCode == 13) {                
                 this.inputElement.value = this.items[this.selectedIndex].name;
                 return true;
             }
@@ -68,7 +68,7 @@ export class Intellisense {
 
     onblur(this: Intellisense) {
         console.log("blur: ")
-
+        this.selectedIndex = -1;
         this.toggleDisplay(this.suggestElement);
     }
 
@@ -92,7 +92,7 @@ export class Intellisense {
     }
 
     moveIndex(position: number) {
-        
+
         if (position == this.items.length || position < 0) {
             this.selectedIndex = 0;
         }
@@ -101,6 +101,13 @@ export class Intellisense {
         }
         else {
             this.selectedIndex = position;
+        }
+
+        if (position >= 0){
+            var s  = this.items[this.selectedIndex].name
+            this.inputElement.value = s;
+            this.inputElement.selectionStart = s.length;
+            this.inputElement.selectionEnd = s.length;
         }
 
         console.log("selectedIndex =" + this.selectedIndex);
