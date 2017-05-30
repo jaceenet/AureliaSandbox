@@ -23,8 +23,8 @@
 
   a {
     display: block;
-    padding: 0 6px;
-    font-style: italic;
+    padding: 0 7px;
+    font: 16px arial,sans-serif;
     color: darkgrey;
 
     span{
@@ -33,7 +33,7 @@
   }
 
   a:hover, a.active {
-    background-color: grey;
+    background-color: #ccc;
   }
 }
 

@@ -1,11 +1,13 @@
-import { bindable, bindingMode } from "aurelia-framework";
-
+import { bindable, bindingMode, autoinject } from "aurelia-framework";
+import { Nest } from "./nest";
+import { HttpClient } from "aurelia-fetch-client";
 
 export class Intellisense {
     private inputElement: HTMLInputElement;
     private suggestElement: HTMLDivElement;
     private items: any[];
     private selectedIndex: number;
+    private nest: Nest;
 
     @bindable({ defaultBindingMode: bindingMode.twoWay })
     querytext: string;
@@ -14,6 +16,8 @@ export class Intellisense {
         this.items = [];
         this.items = this.query("");
         this.selectedIndex = -1;
+        this.nest = new Nest("http://192.168.10.25:9200", new HttpClient());
+        this.nest.query("25").then(data => {console.log("search",data)});
     }
 
     attached() {
@@ -22,7 +26,7 @@ export class Intellisense {
         this.inputElement.addEventListener("blur", e => this.onblur());
 
         this.inputElement.addEventListener("keydown", (e: KeyboardEvent) => {
-            console.log("keydown intelli, ", e);
+            //console.log("keydown intelli, ", e);
 
             if (e.keyCode == 9) {
                 this.moveIndex(this.selectedIndex + 1);
@@ -48,12 +52,12 @@ export class Intellisense {
             return true;
         })
 
-        console.log("Attached fixed: ", this.inputElement, this.suggestElement);
+        //console.log("Attached fixed: ", this.inputElement, this.suggestElement);
     }
 
     querytextChanged() {
 
-        console.log("query changed", this.querytext);
+        //console.log("query changed", this.querytext);
         this.items = this.query(this.querytext);
     }
 
@@ -64,7 +68,7 @@ export class Intellisense {
 
     setIndex(index: number) {
 
-        console.log("setindex ", index, event);
+        //console.log("setindex ", index, event);
         if (index < this.items.length) {
             this.selectedIndex = index;
             this.inputElement.value = this.items[index].name;
@@ -82,22 +86,19 @@ export class Intellisense {
     }
 
     onfocus(this: Intellisense) {
-        console.log("focus")
+        //console.log("focus")
         this.items = this.query(this.querytext);
         this.toggleDisplay(this.suggestElement);
     }
 
     onblur(this: Intellisense) {
-        console.log("blur: ")
+        //console.log("blur: ")
         this.selectedIndex = -1;
         this.toggleDisplay(this.suggestElement);
     }
 
-    private from: string[] = [" from", " in"];
-    private in: string[] = [" is", " where"];
-
     query(value: string) {
-        console.log("executing query: " + value);
+        //console.log("executing query: " + value);
 
         var cache = this.simpleQuery(value, cache);
         cache = this.filterQuery(value, cache);
@@ -150,13 +151,16 @@ export class Intellisense {
             cache.push({ "name": "where" })
         }
 
-        if (this.queryMatch(this.from, query)) {
-            cache.push({ "name": query + " customers" });
-            cache.push({ "name": query + " contacts" });
+        if (this.queryMatch([" i"], query)) {
+            cache.push({ "name": query + " alle udbudsgrupper" });
+            cache.push({ "name": query + " alle regioner" });
+            cache.push({ "name": query + " alle atc koder" });
+            cache.push({ "name": query + " alle steder" });
+            cache.push({ "name": query + " list emner" });
         }
 
 
-        if (this.queryMatch(this.in, query)) {
+        if (this.queryMatch([" fra"], query)) {
 
             for (var year = 2000; year < 2025; year++) {
                 cache.push({ "name": query + " " + year });
@@ -168,6 +172,7 @@ export class Intellisense {
     }
 
     simpleQuery(query: string = "", cache: suggestItem[] = []) : suggestItem[] {
+        
         console.log("simple query: ", query, " cache: ", cache);
 
         if (query == undefined || query.length > 0) {
