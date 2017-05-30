@@ -24,6 +24,12 @@ export class Intellisense {
         this.inputElement.addEventListener("keydown", (e: KeyboardEvent) => {
             console.log("keydown intelli, ", e);
 
+            if (e.keyCode == 9){
+                this.moveIndex(this.selectedIndex + 1);
+                e.preventDefault();                
+                return false;
+            }
+
             if (e.keyCode == 40) { //down
                 this.moveIndex(this.selectedIndex + 1);
                 return false;
@@ -35,7 +41,7 @@ export class Intellisense {
             }
 
             if (e.keyCode == 13) {                
-                this.inputElement.value = this.items[this.selectedIndex].name;
+                this.setIndex(this.selectedIndex);
                 return true;
             }
 
@@ -49,6 +55,21 @@ export class Intellisense {
 
         console.log("query changed", this.querytext);
         this.items = this.query(this.querytext);
+    }
+
+    clicklink(index: number){
+        this.setIndex(index);
+        return true;
+    }
+
+    setIndex(index: number){
+        
+        console.log("setindex ", index, event);
+        if (index < this.items.length){
+            this.selectedIndex = index;
+            this.inputElement.value = this.items[index].name;
+        }
+        
     }
 
     private toggleDisplay(x: HTMLElement) {

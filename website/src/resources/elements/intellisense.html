@@ -6,7 +6,7 @@
 
         <div ref="suggestElement" class="autocomplete-suggestion" style="display:none;">
             <div class="list-group">                
-                <a repeat.for="item of items" class="${ selectedIndex == $index ? 'active' : '' }" href="#">${item.name}</a>
+                <a repeat.for="item of items" mouseover.trigger="setIndex($index)" mousedown.trigger="clicklink($index)" class="${ selectedIndex == $index ? 'active' : '' }" href="#">${item.name}</a>
             </div>
         </div>        
     </div>
